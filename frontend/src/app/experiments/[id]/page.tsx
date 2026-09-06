@@ -1,19 +1,27 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { CodeViewer } from '@/components/CodeViewer';
 import { ExecutionLog } from '@/components/ExecutionLog';
 import { ResultsViewer } from '@/components/ResultsViewer';
 import { useWebSocket } from '@/hooks/useWebSocket';
 
-export default function ExperimentDetail({ params }: { params: { id: string } }) {
+export default function ExperimentDetail() {
+  const routeParams = useParams();
+  const id = (routeParams?.id as string) || '';
+
   const { data: exp, refetch } = useQuery({ 
-    queryKey: ['experiment', params.id], 
-    queryFn: () => api.getExperiment(params.id),
-    refetchInterval: (data) => (data?.state?.data?.status === 'running' || data?.state?.data?.status === 'pending') ? 2000 : false
+    queryKey: ['experiment', id], 
+    queryFn: () => api.getExperiment(id),
+    enabled: Boolean(id),
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      return (status === 'running' || status === 'pending') ? 2000 : false;
+    }
   });
 
-  const { messages, isConnected } = useWebSocket(params.id);
+  const { messages, isConnected } = useWebSocket(id);
 
   if (!exp) return <div className="p-8">Loading...</div>;
 
