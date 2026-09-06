@@ -17,6 +17,8 @@ export interface DataFile {
   file_size: number;
   description: string | null;
   upload_date: string;
+  shape?: number[] | null;
+  dtype?: string | null;
 }
 
 export interface Experiment {

@@ -38,8 +38,52 @@ async def upload_data(
 
 @router.get("/files")
 async def list_data_files(db: AsyncSession = Depends(get_db)):
+    # Auto-discover files in radar_data directory
+    radar_dir = settings.RADAR_DATA_DIR
+    if os.path.exists(radar_dir):
+        existing_res = await db.execute(select(DataFile))
+        existing_paths = {df.file_path for df in existing_res.scalars().all()}
+        
+        for fname in os.listdir(radar_dir):
+            fpath = os.path.join(radar_dir, fname)
+            if os.path.isfile(fpath) and fpath not in existing_paths:
+                fsize = os.path.getsize(fpath)
+                desc = "Pre-generated synthetic SAR dataset" if "sar_data" in fname else "Captured radar dataset"
+                new_df = DataFile(
+                    id=str(uuid.uuid4()),
+                    name=fname,
+                    file_path=fpath,
+                    file_size=fsize,
+                    description=desc
+                )
+                db.add(new_df)
+        await db.commit()
+
     result = await db.execute(select(DataFile))
-    return list(result.scalars().all())
+    files = result.scalars().all()
+    
+    file_list = []
+    for f in files:
+        item = {
+            "id": f.id,
+            "name": f.name,
+            "file_path": f.file_path,
+            "file_size": f.file_size,
+            "description": f.description,
+            "upload_date": f.upload_date.isoformat() if f.upload_date else None,
+            "shape": None,
+            "dtype": None,
+        }
+        if f.name.endswith('.npy') and os.path.exists(f.file_path):
+            try:
+                arr = np.load(f.file_path, mmap_mode='r')
+                item["shape"] = list(arr.shape)
+                item["dtype"] = str(arr.dtype)
+            except Exception:
+                pass
+        file_list.append(item)
+        
+    return file_list
 
 @router.get("/files/{file_id}")
 async def get_data_file(file_id: str, db: AsyncSession = Depends(get_db)):

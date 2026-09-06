@@ -14,26 +14,32 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-xl border border-gray-800 bg-gray-900/50">
+        <Link href="/knowledge-base" className="p-6 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-gray-700 transition-colors block">
           <h3 className="text-gray-400 font-medium">KB Documents</h3>
-          <p className="text-3xl font-bold mt-2">{docs?.length || 0}</p>
-        </div>
-        <div className="p-6 rounded-xl border border-gray-800 bg-gray-900/50">
-          <h3 className="text-gray-400 font-medium">Experiments</h3>
-          <p className="text-3xl font-bold mt-2">{exps?.length || 0}</p>
-        </div>
-        <div className="p-6 rounded-xl border border-gray-800 bg-gray-900/50">
-          <h3 className="text-gray-400 font-medium">Data Files</h3>
-          <p className="text-3xl font-bold mt-2">{dataFiles?.length || 0}</p>
-        </div>
+          <p className="text-3xl font-bold mt-2 text-gray-100">{docs?.length || 0}</p>
+          <span className="text-xs text-blue-400 mt-2 block">View knowledge base →</span>
+        </Link>
+        <Link href="/radar-data" className="p-6 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-gray-700 transition-colors block">
+          <h3 className="text-gray-400 font-medium">Radar Data Files</h3>
+          <p className="text-3xl font-bold mt-2 text-cyan-400">{dataFiles?.length || 0}</p>
+          <span className="text-xs text-cyan-400 mt-2 block">Manage & upload datasets →</span>
+        </Link>
+        <Link href="/experiments" className="p-6 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-gray-700 transition-colors block">
+          <h3 className="text-gray-400 font-medium">Experiments Run</h3>
+          <p className="text-3xl font-bold mt-2 text-emerald-400">{exps?.length || 0}</p>
+          <span className="text-xs text-emerald-400 mt-2 block">View execution history →</span>
+        </Link>
       </div>
 
-      <div className="flex gap-4">
-        <Link href="/knowledge-base" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md transition-colors">
-          View KB
+      <div className="flex gap-4 flex-wrap">
+        <Link href="/experiments/new" className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors text-sm shadow">
+          + New Experiment
         </Link>
-        <Link href="/experiments/new" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors">
-          New Experiment
+        <Link href="/radar-data" className="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium rounded-md transition-colors text-sm border border-gray-700">
+          Upload Radar Data
+        </Link>
+        <Link href="/knowledge-base" className="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium rounded-md transition-colors text-sm border border-gray-700">
+          Knowledge Base
         </Link>
       </div>
 

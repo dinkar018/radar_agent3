@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Database, FlaskConical, Plus } from 'lucide-react';
+import { Home, Database, FlaskConical, Plus, Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Sidebar() {
@@ -10,6 +10,7 @@ export function Sidebar() {
   const links = [
     { href: '/', label: 'Dashboard', icon: Home },
     { href: '/knowledge-base', label: 'Knowledge Base', icon: Database },
+    { href: '/radar-data', label: 'Radar Data', icon: Radio },
     { href: '/experiments', label: 'Experiments', icon: FlaskConical },
     { href: '/experiments/new', label: 'New Experiment', icon: Plus },
   ];
